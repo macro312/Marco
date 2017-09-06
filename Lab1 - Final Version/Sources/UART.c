@@ -54,22 +54,6 @@ FIFO_Init(&TX_FIFO);
 
 return true;
 
-//UART2_C4 BRFA fine tunes baud rate
-//UART2_BDH;
-//UART2_BDL;
-//UART2_S1
-
-/* List of registers to configure
-
-UART2_C3
-UART2_C4
-UART2_S1
-UART2_S2
-UART2_BDH
-UART2_BDL
-UART2_MODEM
-UART2_C5*/
-
 
 /*! @brief Get a character from the receive FIFO if it is not empty.
  *

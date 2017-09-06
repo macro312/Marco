@@ -45,71 +45,19 @@
 #define BAUD_RATE 38400
 
 //Global Variables
-uint8_t Packet_NoAcknowledge;
 TFIFO towerFIFO;
-
-static uint16union_t twrNumber = {0x241A}; //4292 Student Number
-
-
-void TowerVersion(void){
-
-  Packet_Put(Packet_NoAcknowledge, 0x76, 0x01, 0x00);
-
-}
-
-void TowerStartup(void){
-
-  Packet_Put(0x04, 0x00, 0x00, 0x00);
-  TowerVersion();
-  Packet_Put(0x08, 0x01, twrNumber.s.Hi, twrNumber.s.Lo); //Splitting uint16_t into two uint8_t, MSB, LSB
-
-}
-
-void CheckAcknowledgement(void){
-  if(Packet_Command & PACKET_ACK_MASK == PACKET_ACK_MASK){
-      Packet_Put(Packet_Command, Packet_Parameter1, Packet_Parameter2, Packet_Parameter3);
-  }
-}
-
-void Packet_Handle(void){
-uint8_t Packet_NoAcknowledge = Packet_Command & ~PACKET_ACK_MASK; //ACK bit
-
-  switch(Packet_NoAcknowledge){ // Splitting Serial Protocols in read/write
-    case 0x04: //Tower Startup Parameter 1: 0 | Parameter 2: 0 | Parameter 3: 0
-      TowerStartup();
-      break;
-
-    case 0x09: //Special – Tower version Parameter 1: ‘v’ = version | Parameter 2: Major Version Number | Parameter 3: Minor Version Number (out of 100
-      TowerVersion();
-      break;
-
-    case 0x0B: //Parameter 1: 1 = get Tower number, 2 = set Tower number | Parameter 2: LSB for a “set”, 0 for a “get” | Parameter 3: MSB for a “set”, 0 for a “get”
-      if(Packet_Parameter1 == 2){
-	  Packet_Put(0x08, Packet_Parameter1, Packet_Parameter2, Packet_Parameter3);
-//	  twrNumber.s.Hi = Packet_Parameter2;
-//	  twrNumber.s.Lo = Packet_Parameter3;
-      }else{
-	  Packet_Put(0x08, Packet_Parameter1, twrNumber.s.Hi, twrNumber.s.Lo);
-      }break;
-
-  }
-  CheckAcknowledgement();
-}
-
-
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
   /* Write your local variable definition here */
-
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
   Packet_Init(BAUD_RATE, CPU_BUS_CLK_HZ);
-//  LEDs_Init();
-  TowerStartup();
+  LEDs_Init();
+  TowerStartup(0x04);
   for(;;){
 
 //Packet_Put(command, param1, param2, param3);
@@ -118,8 +66,9 @@ int main(void)
 //      }
       //if(Packet_Put); current config only sent TWR ver, number and std number
       UART_Poll();
+      LEDs_Toggle(LED_BLUE);
 //      Packet_Handle();
-      if(Packet_Get())
+      if(Packet_Get() == 1)
 	{
 	  //callpacket process
 	  Packet_Handle();
