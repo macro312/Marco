@@ -10,10 +10,6 @@
 
 #define FIFO_SIZE 256
 
-
-//FIFO is empty if Put==Get
-//FIFO is full if Put + 1 == Get
-
 void FIFO_Init(TFIFO * const FIFO){
 
  FIFO->NbBytes=0;	//Set R, W, Size position
@@ -41,20 +37,7 @@ bool FIFO_Put(TFIFO * const FIFO, const uint8_t data){
 }
 
 
-//int i;
-//for(i=0; i<FIFO->NbBytes; i++){
-//    if(FIFO->write + 1 == FIFO->read){
-//	if(((FIFO->write +1) == FIFO->NbBytes) && (FIFO->read == 0)){
-//	    return(0); //FIFO is full
-//	}
-//    }else{
-//	FIFO->Buffer[FIFO->write] = data; //increment address
-//	FIFO->write++; //increment the write
-//	if(FIFO->write == FIFO_SIZE){
-//	    FIFO->write = 0;
-//	}
-//	return (1);
-//    }
+
 
 bool FIFO_Get(TFIFO * const FIFO, uint8_t * const dataPtr){
 
@@ -70,26 +53,12 @@ bool FIFO_Get(TFIFO * const FIFO, uint8_t * const dataPtr){
 	  FIFO->NbBytes--;
 
 	  return (1);
-      }else{
+	}else{
 	  return(0); //If read and write are same, there is no data
 	  }
 }
 
-//
-//int i;
-//FIFO->Buffer = *dataPtr;
-//for(i=0; i<FIFO->NbBytes; i++){
-//    if(FIFO->read != FIFO->write){
-//	  FIFO->Buffer[(FIFO->read)];
-//	  FIFO->read++;
-//	  if(FIFO->read == FIFO_SIZE){
-//	      FIFO->read = 0;
-//	  }
-//	  return (1);
-//    }else{
-//	  return(0);
-//    }
-//}
+
 
 
 
