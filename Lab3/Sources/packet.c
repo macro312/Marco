@@ -25,12 +25,7 @@
 static uint8_t packetPosition;
 static uint16union_t twrNumber = {0x241A}; //4292 Student Number
 
-uint8_t Packet_Command,		/*!< The packet's command */
-	Packet_Parameter1, 	/*!< The packet's 1st parameter */
-	Packet_Parameter2, 	/*!< The packet's 2nd parameter */
-	Packet_Parameter3,	/*!< The packet's 3rd parameter */
-	Packet_Checksum;	/*!< The packet's checksum */
-
+TPacket Packet;
 
 /*! @brief Initializes the packets by calling the initialization routines of the supporting software modules.
  *
