@@ -34,6 +34,11 @@
 #include "PE_Const.h"
 #include "IO_Map.h"
 
+#include "UART.h"
+#include "packet.h"
+
+// Constant Private Global Variables and Macro Definitions
+static uint32_t BAUDRATE = 38400;
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -43,11 +48,13 @@ int main(void)
 
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
+  Packet_Init(BAUDRATE, CPU_BUS_CLK_HZ);
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
   for (;;)
   {
+      UART_Poll();
   }
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
