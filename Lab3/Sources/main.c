@@ -29,6 +29,7 @@
 
 // CPU module - contains low level hardware initialization routines
 #include "Cpu.h"
+#include "Events.h"
 #include "PE_Types.h"
 #include "PE_Error.h"
 #include "PE_Const.h"
@@ -47,8 +48,10 @@ int main(void)
   /* Write your local variable definition here */
 
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
+  __DI();
   PE_low_level_init();
   Packet_Init(BAUDRATE, CPU_BUS_CLK_HZ);
+  TowerStartup(0x04);
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */

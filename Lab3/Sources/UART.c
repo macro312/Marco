@@ -20,6 +20,10 @@ static TFIFO TX_FIFO, RX_FIFO;
  */
 bool UART_Init(const uint32_t baudRate, const uint32_t moduleClk)
 {
+  int16union_t divisor;
+  uint8_t finAdj;
+  uint32_t br32, temp;
+
 SIM_SCGC4 |= SIM_SCGC4_UART2_MASK;	//Clock gating UART 4 and Port E
 SIM_SCGC5 |=  (SIM_SCGC5_PORTE_MASK);
 
@@ -38,14 +42,25 @@ UART2_C2 &= ~UART_C2_TE_MASK;
 //UART2_C2 = 0x00;
 
 
-UART2_C4 &= ~UART_C4_BRFA_MASK; 	//Baud Rate Fine Adjust to 0
-UART2_C4 |= (0x04 & UART_C4_BRFA_MASK);	//And 0x04 to BRFA.
+//UART2_C4 &= ~UART_C4_BRFA_MASK; 	//Baud Rate Fine Adjust to 0
+//UART2_C4 |= (0x04 & UART_C4_BRFA_MASK);	//And 0x04 to BRFA.
 
 
-uint16_t BRFD = moduleClk/(baudRate * 16); 	//Baud rate fractional divisor
-UART2_BDH = (BRFD & 0x1F00) >> 8;		//13 Bit registry for SBR, 5 for High, 8 for Low. Must write High first then low.
-UART2_BDL = (BRFD & 0x00FF);			//BRFD will not change, it is & with all bits in SBR for appropriate baudrate settings
+//uint16_t BRFD = moduleClk/(baudRate * 16); 	//Baud rate fractional divisor
+//UART2_BDH = (BRFD & 0x1F00) >> 8;		//13 Bit registry for SBR, 5 for High, 8 for Low. Must write High first then low.
+//UART2_BDL = (BRFD & 0x00FF);			//BRFD will not change, it is & with all bits in SBR for appropriate baudrate settings
 						//Could be hard coded with BDH =0x00, BDL=0x20, BRFA(0x17); from 38400 Baud Rate, 20971520hz
+br32 = (2*moduleClk / baudRate);
+divisor.l = (uint16_t)(br32/32);
+finAdj = (uint8_t)(br32 % 32);
+
+UART2_BDH = (UART2_BDH & ~UART_BDH_SBR_MASK) | (divisor.s.Hi & UART_BDH_SBR_MASK);
+temp = (UART2_BDH & ~UART_BDH_SBR_MASK) | (divisor.s.Hi & UART_BDH_SBR_MASK);
+UART2_BDL = divisor.s.Lo;
+temp = divisor.s.Lo;
+UART2_C4 = (UART2_C4 & ~UART_C4_BRFA_MASK)|(finAdj & UART_C4_BRFA_MASK);
+temp = (UART2_C4 & ~UART_C4_BRFA_MASK)|(finAdj & UART_C4_BRFA_MASK);
+
 UART2_C2 |= UART_C2_RE_MASK;
 UART2_C2 |= UART_C2_TE_MASK;
 

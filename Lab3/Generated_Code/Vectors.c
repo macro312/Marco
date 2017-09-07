@@ -6,7 +6,7 @@
 **     Version     : Component 01.028, Driver 01.04, CPU db: 3.00.000
 **     Repository  : Kinetis
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-08-19, 00:40, # CodeGen: 1
+**     Date/Time   : 2017-09-07, 17:13, # CodeGen: 1
 **     Abstract    :
 **
 **     Settings    :
@@ -54,11 +54,9 @@
 **  @{
 */         
 
-#include "Cpu.h"
-#include "UART.h"
-#include "PIT.h"
-#include "RTC.h"
-#include "FTM.h"
+  #include "Cpu.h"
+  #include "Events.h"
+
 
   /* ISR prototype */
   extern uint32_t __SP_INIT;
