@@ -59,7 +59,7 @@ typedef union
 #define Packet_Parameter23 Packet.packetStruct.parameters.combined23.parameter23
 #define Packet_Checksum    Packet.packetStruct.checksum
 
-extern TPacket Packet;
+//extern TPacket Packet;
 
 // Acknowledgment bit mask
 extern const uint8_t PACKET_ACK_MASK;
@@ -83,5 +83,7 @@ bool Packet_Get(void);
  *  @return bool - TRUE if a valid packet was sent.
  */
 bool Packet_Put(const uint8_t command, const uint8_t parameter1, const uint8_t parameter2, const uint8_t parameter3);
+
+void Packet_Handle(void);
 
 #endif

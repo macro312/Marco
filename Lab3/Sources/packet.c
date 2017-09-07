@@ -25,7 +25,7 @@
 static uint8_t packetPosition;
 static uint16union_t twrNumber = {0x241A}; //4292 Student Number
 
-TPacket Packet;
+static TPacket Packet;
 
 /*! @brief Initializes the packets by calling the initialization routines of the supporting software modules.
  *

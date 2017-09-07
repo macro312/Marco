@@ -54,6 +54,12 @@ int main(void)
   /* Write your code here */
   for (;;)
   {
+      if (Packet_Get())
+	{
+	  // Process the packet!
+	  Packet_Handle();
+	}
+
       UART_Poll();
   }
 
