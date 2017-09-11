@@ -41,6 +41,10 @@
 // Constant Private Global Variables and Macro Definitions
 static uint32_t BAUDRATE = 38400;
 
+void __attribute__ ((interrupt)) MYISR(void){
+
+}
+
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
