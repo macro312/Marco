@@ -124,33 +124,23 @@ uint8_t uartDreg;
 }
 
 void __attribute__ ((interrupt)) UART_ISR(void){
-  uint8_t uartC2reg = UART2_C2;
-  uint8_t uartDreg;
-
   // Receive a character
   if (UART2_C2 & UART_C2_RIE_MASK)
   {
-    // Clear RDRF flag by reading the status register
-    // Then FIFO PUT
+    if(UART2_S1 & UART_S1_RDRF_MASK){
+	FIFO_Put(&RX_FIFO, UART2_D);	    // Clear RDRF flag by reading the status register (By reading, RDRF is cleared).
+					    // Then FIFO PUT
+    }
   }
-
   // Transmit a character
   if (UART2_C2 & UART_C2_TIE_MASK)
   {
-    // Clear TDRE flag by reading the status register
-    // Then FIFO GET
-    // If nothing to get, 
-    // Disable transmit interrupt if no byte retrieved from FIFO
-  }
-  
-  if((statusReg & UART_S1_TDRE_MASK) && (uartC2reg & UART_C2_TIE_MASK) && (uartC2reg & UART_C2_TCIE_MASK)){
-
-      UART2_C2 |= UART_C2_TCIE_MASK;
-      FIFO_Get(&TX_FIFO, (uint8_t *)&UART2_D);
-  }
-  if(uartC2reg & UART_C2_RIE_MASK){
-      UART2_C2 |= UART_C2_RIE_MASK;
-      uartDreg = UART2_D;
-      FIFO_Put(&RX_FIFO, uartDreg);
+      if(UART2_S1 & UART_S1_TDRE_MASK){
+	  if(!FIFO_Get(&TX_FIFO, (uint8_t *)&UART2_D)){ // Then FIFO GET
+	      UART2_C2 &= ~UART_C2_TIE_MASK;
+	  } // Clear TDRE flag by reading the status register
+	    // If nothing to get,
+	    // Disable transmit interrupt if no byte retrieved from FIFO
+	}
   }
 }
