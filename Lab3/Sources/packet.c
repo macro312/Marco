@@ -23,7 +23,7 @@
 
 //Packet Position
 static uint8_t packetPosition;
-static uint16union_t twrNumber = {0x241A}; //4292 Student Number
+static uint16union_t twrNumber = {0x10C4}; //Dec.4292 to Hex Student Number
 
 static TPacket Packet;
 
@@ -106,7 +106,6 @@ bool Packet_Get(void){
  */
 bool Packet_Put(const uint8_t command, const uint8_t param1, const uint8_t param2, const uint8_t param3){
   return(UART_OutChar(command)&&
-
 	 UART_OutChar(param1) &&
 	 UART_OutChar(param2) &&
 	 UART_OutChar(param3) &&

@@ -40,16 +40,13 @@ UART2_C2 &= ~UART_C2_TE_MASK;
 //UART2_C4 |= (0x04 & UART_C4_BRFA_MASK); //Set BRFA to 0x04
 //UART2_C1 = 0x00;
 //UART2_C2 = 0x00;
-
-
 //UART2_C4 &= ~UART_C4_BRFA_MASK; 	//Baud Rate Fine Adjust to 0
 //UART2_C4 |= (0x04 & UART_C4_BRFA_MASK);	//And 0x04 to BRFA.
-
-
 //uint16_t BRFD = moduleClk/(baudRate * 16); 	//Baud rate fractional divisor
 //UART2_BDH = (BRFD & 0x1F00) >> 8;		//13 Bit registry for SBR, 5 for High, 8 for Low. Must write High first then low.
 //UART2_BDL = (BRFD & 0x00FF);			//BRFD will not change, it is & with all bits in SBR for appropriate baudrate settings
-						//Could be hard coded with BDH =0x00, BDL=0x20, BRFA(0x17); from 38400 Baud Rate, 20971520hz
+//						//Could be hard coded with BDH =0x00, BDL=0x20, BRFA(0x17); from 38400 Baud Rate, 20971520hz
+
 br32 = (2*moduleClk / baudRate);
 divisor.l = (uint16_t)(br32/32);
 finAdj = (uint8_t)(br32 % 32);
@@ -71,16 +68,8 @@ NVICICPR1 = NVIC_ICPR_CLRPEND(1<<17);
 NVICISER1 = NVIC_ISER_SETENA(1<<17);
 
 return true;
-
-
-/*! @brief Get a character from the receive FIFO if it is not empty.
- *
- *  @param dataPtr A pointer to memory to store the retrieved byte.
- *  @return bool - TRUE if the receive FIFO returned a character.
- *  @note Assumes that UART_Init has been called.
- */
-
 }
+
 
 /*! @brief Get a character from the receive FIFO if it is not empty.
  *
@@ -129,20 +118,22 @@ uint8_t uartDreg;
 }
 
 void __attribute__ ((interrupt)) UART_ISR(void){
-  if(UART2_C2 & UART_C2_RIE_MASK){
-      if (UART2_S1 & UART_S1_RDRF_MASK){
-      UART2_C2 |= UART_C2_RIE_SHIFT;	//Return R-interupt flag to 0 after trigger
-      }
-  }
-  if(UART2_C2 & UART_C2_TIE_MASK){
-      if (UART2_S1 & UART_S1_TDRE_MASK){
+  uint32_t statusReg = UART2_S1;
+  uint8_t uartC2reg = UART2_C2;
+  uint8_t uartDreg;
 
-      }
+  if((statusReg & UART_S1_TDRE_MASK) && (uartC2reg & UART_C2_TIE_MASK) && (uartC2reg & UART_C2_TCIE_MASK)){
+
+      UART2_C2 |= UART_C2_TCIE_MASK;
+      FIFO_Get(&TX_FIFO, (uint8_t *)&UART2_D);
+//      UART2_C2 |= UART_C2_TIE_MASK; //Fix up
+
   }
-  else{
-      return;
+  if((statusReg & UART_S1_RDRF_MASK) && (uartC2reg & UART_C2_RIE_MASK)){
+
+      uartDreg = UART2_D;
+      FIFO_Put(&RX_FIFO, uartDreg);
+      UART2_C2 |= UART_C2_RIE_MASK;
+
   }
 }
-
-
-
