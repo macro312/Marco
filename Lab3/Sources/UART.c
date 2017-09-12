@@ -118,22 +118,16 @@ uint8_t uartDreg;
 }
 
 void __attribute__ ((interrupt)) UART_ISR(void){
-  uint32_t statusReg = UART2_S1;
   uint8_t uartC2reg = UART2_C2;
   uint8_t uartDreg;
 
-  if((statusReg & UART_S1_TDRE_MASK) && (uartC2reg & UART_C2_TIE_MASK) && (uartC2reg & UART_C2_TCIE_MASK)){
-
+  if((uartC2reg & UART_C2_TIE_MASK) && (uartC2reg & UART_C2_TCIE_MASK)){
       UART2_C2 |= UART_C2_TCIE_MASK;
       FIFO_Get(&TX_FIFO, (uint8_t *)&UART2_D);
-//      UART2_C2 |= UART_C2_TIE_MASK; //Fix up
-
   }
-  if((statusReg & UART_S1_RDRF_MASK) && (uartC2reg & UART_C2_RIE_MASK)){
-
+  if(uartC2reg & UART_C2_RIE_MASK){
+      UART2_C2 |= UART_C2_RIE_MASK;
       uartDreg = UART2_D;
       FIFO_Put(&RX_FIFO, uartDreg);
-      UART2_C2 |= UART_C2_RIE_MASK;
-
   }
 }
