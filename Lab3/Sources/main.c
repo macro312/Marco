@@ -34,16 +34,11 @@
 #include "PE_Error.h"
 #include "PE_Const.h"
 #include "IO_Map.h"
-
 #include "UART.h"
 #include "packet.h"
 
 // Constant Private Global Variables and Macro Definitions
 static uint32_t BAUDRATE = 38400;
-
-void __attribute__ ((interrupt)) MYISR(void){
-
-}
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -67,8 +62,6 @@ int main(void)
 	  // Process the packet!
 	  Packet_Handle();
 	}
-
-      UART_Poll();
   }
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
