@@ -56,6 +56,7 @@ int main(void)
   PE_low_level_init();
   Packet_Init(BAUDRATE, CPU_BUS_CLK_HZ);
   TowerStartup(0x04);
+  __EI();
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */

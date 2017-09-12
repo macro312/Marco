@@ -67,6 +67,9 @@ UART2_C2 |= UART_C2_TE_MASK;
 FIFO_Init(&RX_FIFO);
 FIFO_Init(&TX_FIFO);
 
+NVICICPR1 = NVIC_ICPR_CLRPEND(1<<17);
+NVICISER1 = NVIC_ISER_SETENA(1<<17);
+
 return true;
 
 
@@ -124,5 +127,22 @@ uint8_t uartDreg;
   }
 
 }
+
+void __attribute__ ((interrupt)) UART_ISR(void){
+  if(UART2_C2 & UART_C2_RIE_MASK){
+      if (UART2_S1 & UART_S1_RDRF_MASK){
+      UART2_C2 |= UART_C2_RIE_SHIFT;	//Return R-interupt flag to 0 after trigger
+      }
+  }
+  if(UART2_C2 & UART_C2_TIE_MASK){
+      if (UART2_S1 & UART_S1_TDRE_MASK){
+
+      }
+  }
+  else{
+      return;
+  }
+}
+
 
 

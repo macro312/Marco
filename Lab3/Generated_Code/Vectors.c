@@ -56,7 +56,7 @@
 
   #include "Cpu.h"
   #include "Events.h"
-
+  #include"UART.h"
 
   /* ISR prototype */
   extern uint32_t __SP_INIT;
@@ -139,9 +139,9 @@
     (tIsrFunc)&Cpu_Interrupt,          /* 0x3E  0x000000F8   -   ivINT_UART0_ERR                unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x3F  0x000000FC   -   ivINT_UART1_RX_TX              unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x40  0x00000100   -   ivINT_UART1_ERR                unused by PE */
-    (tIsrFunc)&Cpu_Interrupt,          /* 0x41  0x00000104   -   ivINT_UART2_RX_TX              unused by PE */
+    (tIsrFunc)&UART_ISR,           /* 0x41  0x00000104   -   ivINT_UART2_RX_TX              unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x42  0x00000108   -   ivINT_UART2_ERR                unused by PE */
-    (tIsrFunc)&Cpu_Interrupt,          /* 0x43  0x0000010C   -   ivINT_UART3_RX_TX              unused by PE */
+    (tIsrFunc)&Cpu_Interrupt,         	/* 0x43  0x0000010C   -   ivINT_UART3_RX_TX              unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x44  0x00000110   -   ivINT_UART3_ERR                unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x45  0x00000114   -   ivINT_UART4_RX_TX              unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x46  0x00000118   -   ivINT_UART4_ERR                unused by PE */
