@@ -58,6 +58,9 @@ temp = divisor.s.Lo;
 UART2_C4 = (UART2_C4 & ~UART_C4_BRFA_MASK)|(finAdj & UART_C4_BRFA_MASK);
 temp = (UART2_C4 & ~UART_C4_BRFA_MASK)|(finAdj & UART_C4_BRFA_MASK);
 
+  // Page 1918, Enable the Receiver Full Interrupt
+  UART2_C2 |=  UART_C2_RIE_MASK;
+
 UART2_C2 |= UART_C2_RE_MASK;
 UART2_C2 |= UART_C2_TE_MASK;
 
@@ -89,6 +92,9 @@ bool UART_InChar(uint8_t * const dataPtr){
  *  @note Assumes that UART_Init has been called.
  */
 bool UART_OutChar(const uint8_t data){
+  
+ // Arm (or re-arm) transmit interrupt
+  UART2_C2 |= UART_C2_TIE_MASK;
   return FIFO_Put(&TX_FIFO, data);
 
 }
@@ -121,6 +127,22 @@ void __attribute__ ((interrupt)) UART_ISR(void){
   uint32_t statusReg = UART2_S1;
   uint8_t uartC2reg = UART2_C2;
   uint8_t uartDreg;
+
+  // Receive a character
+  if (UART2_C2 & UART_C2_RIE_MASK)
+  {
+    // Clear RDRF flag by reading the status register
+    // Then FIFO PUT
+  }
+
+  // Transmit a character
+  if (UART2_C2 & UART_C2_TIE_MASK)
+  {
+    // Clear TDRE flag by reading the status register
+    // Then FIFO GET
+    // If nothing to get, 
+    // Disable transmit interrupt if no byte retrieved from FIFO
+  }
 
   if((statusReg & UART_S1_TDRE_MASK) && (uartC2reg & UART_C2_TIE_MASK) && (uartC2reg & UART_C2_TCIE_MASK)){
 
