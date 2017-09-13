@@ -4,25 +4,3 @@
 *.mk
 
 Lab3/Debug/
-
-RTOSExample/Debug/makefile
-
-RTOSExample/Debug/RTOSExample\.elf
-
-RTOSExample/Debug/RTOSExample\.map
-
-RTOSExample/Debug/Sources/FIFO\.d
-
-RTOSExample/Debug/Sources/FIFO\.o
-
-RTOSExample/Debug/Sources/LEDs\.d
-
-RTOSExample/Debug/Sources/LEDs\.o
-
-RTOSExample/Debug/Sources/packet\.d
-
-RTOSExample/Debug/Sources/packet\.o
-
-RTOSExample/Debug/Sources/UART\.d
-
-RTOSExample/Debug/Sources/UART\.o
