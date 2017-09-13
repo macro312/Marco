@@ -92,11 +92,13 @@ bool UART_InChar(uint8_t * const dataPtr){
  *  @note Assumes that UART_Init has been called.
  */
 bool UART_OutChar(const uint8_t data){
-  
+  bool temp;
+  EnterCritical();
  // Arm (or re-arm) transmit interrupt
   UART2_C2 |= UART_C2_TIE_MASK;
-  return FIFO_Put(&TX_FIFO, data);
-
+  temp = FIFO_Put(&TX_FIFO, data);
+  ExitCritical();
+  return temp;
 }
 
 /*! @brief Poll the UART status register to try and receive and/or transmit one character.

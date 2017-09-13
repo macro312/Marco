@@ -105,6 +105,7 @@ bool Packet_Get(void){
  *  @return bool - TRUE if a valid packet was sent.
  */
 bool Packet_Put(const uint8_t command, const uint8_t param1, const uint8_t param2, const uint8_t param3){
+//can make critical if bothered
   return(UART_OutChar(command)&&
 	 UART_OutChar(param1) &&
 	 UART_OutChar(param2) &&

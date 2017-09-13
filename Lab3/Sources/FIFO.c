@@ -7,22 +7,26 @@
 
 #include "types.h"
 #include "FIFO.h"
+#include "PE_Types.h"
+#include "Cpu.h"
 
 #define FIFO_SIZE 256
 
 void FIFO_Init(TFIFO * const FIFO){
+  EnterCritical();
+  FIFO->NbBytes=0;	//Set R, W, Size position
+  FIFO->read = 0;
+  FIFO->write = 0;
+  ExitCritical();
 
- FIFO->NbBytes=0;	//Set R, W, Size position
- FIFO->read = 0;
- FIFO->write = 0;
- FIFO->Buffer[FIFO_SIZE];
 }
 
 
 bool FIFO_Put(TFIFO * const FIFO, const uint8_t data){
-
+  EnterCritical();
       if(FIFO->write+1 == FIFO->read){
 	  if((FIFO->write + 1 == FIFO->NbBytes) && (FIFO->read == 0)){
+	      ExitCritical();
 	      return (0); //Check if full
 	  }
   }else{
@@ -32,6 +36,7 @@ bool FIFO_Put(TFIFO * const FIFO, const uint8_t data){
       if(FIFO->write==FIFO_SIZE){
 	  FIFO->write = 0;
       }
+      ExitCritical();
       return (1);
   }
 }
@@ -40,7 +45,7 @@ bool FIFO_Put(TFIFO * const FIFO, const uint8_t data){
 
 
 bool FIFO_Get(TFIFO * const FIFO, uint8_t * const dataPtr){
-
+EnterCritical();
       if(FIFO->read != FIFO->write){
 
 	  *dataPtr = FIFO->Buffer[FIFO->read];
@@ -51,10 +56,11 @@ bool FIFO_Get(TFIFO * const FIFO, uint8_t * const dataPtr){
 	  }
 	  FIFO->read++;
 	  FIFO->NbBytes--;
-
+	  ExitCritical();
 	  return (1);
 	}else{
-	  return(0); //If read and write are same, there is no data
+	    ExitCritical();
+	    return(0); //If read and write are same, there is no data
 	  }
 }
 
