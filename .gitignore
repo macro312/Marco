@@ -4,3 +4,5 @@
 *.mk
 
 Lab3/Debug/
+
+Freescale_MQX_4_2/mqx/build/kds/bsp_twrk70f120m/debug/
