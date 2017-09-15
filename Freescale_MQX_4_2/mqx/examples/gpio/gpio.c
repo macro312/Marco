@@ -67,7 +67,7 @@ void int_service_routine(void *pin)
 *      by selected platform.
 *   2) Drives BSP_LED1 based on BSP_BUTTON1 state or
 *      drives BSP_LED1 automatically if BSP_BUTTON1 is not available.
-*   3) Togles BSP_LED1 if BSP_BUTTON1 is not available
+*   3) Toggles BSP_LED1 if BSP_BUTTON1 is not available
 *
 ******************************************************************************/
 void main_task
@@ -104,7 +104,7 @@ void main_task
         printf("Initializing LED1 GPIO as output failed.\n");
         _task_block();
     }
-    /* swich pin functionality (MUX) to GPIO mode */
+    /* switch pin functionality (MUX) to GPIO mode */
     lwgpio_set_functionality(&led1, BSP_LED1_MUX_GPIO);
 
     /* write logical 1 to the pin */
