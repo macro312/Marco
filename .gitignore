@@ -4,3 +4,15 @@
 *.mk
 
 Lab3/Debug/
+
+*.o
+
+*.launch
+
+Freescale_MQX_4_2/
+
+LED_RTOS/
+
+MXQ RTOS/
+
+gpio/
